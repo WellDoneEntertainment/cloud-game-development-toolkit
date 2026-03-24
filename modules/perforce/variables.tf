@@ -525,6 +525,8 @@ variable "p4_code_review_config" {
 
     custom_config : "JSON string with additional Swarm configuration to merge with the generated config.php. Use this for SSO/SAML setup, notifications, Jira integration, etc."
 
+    config_php_source : "Used as the ValueFrom for P4CR's config.php. Contents should be base64 encoded, and will be combined with the generated config.php via array_replace_recursive."
+
 
     # Caching
     elasticache_node_count : "The number of Elasticache nodes to create for the P4 Code Review service. Default is '1'."

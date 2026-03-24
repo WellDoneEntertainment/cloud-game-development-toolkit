@@ -241,7 +241,7 @@ packer build perforce_x86.pkr.hcl
 | <a name="input_shared_network_load_balancer_name"></a> [shared\_network\_load\_balancer\_name](#input\_shared\_network\_load\_balancer\_name) | The name of the shared Network Load Balancer for the Perforce resources. | `string` | `"p4nlb"` | no |
 | <a name="input_shared_nlb_access_logs_prefix"></a> [shared\_nlb\_access\_logs\_prefix](#input\_shared\_nlb\_access\_logs\_prefix) | Log prefix for shared NLB access logs. | `string` | `"perforce-nlb-"` | no |
 | <a name="input_shared_nlb_subnets"></a> [shared\_nlb\_subnets](#input\_shared\_nlb\_subnets) | A list of subnets to attach to the shared network load balancer. | `list(string)` | `null` | no |
-| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to resources. | `map(any)` | <pre>{<br>  "IaC": "Terraform",<br>  "ModuleBy": "CGD-Toolkit",<br>  "ModuleName": "terraform-aws-perforce",<br>  "ModuleSource": "https://github.com/aws-games/cloud-game-development-toolkit/tree/main/modules/perforce",<br>  "RootModuleName": "-"<br>}</pre> | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | Tags to apply to resources. | `map(any)` | <pre>{<br/>  "IaC": "Terraform",<br/>  "ModuleBy": "CGD-Toolkit",<br/>  "ModuleName": "terraform-aws-perforce",<br/>  "ModuleSource": "https://github.com/aws-games/cloud-game-development-toolkit/tree/main/modules/perforce",<br/>  "RootModuleName": "-"<br/>}</pre> | no |
 
 ## Outputs
 

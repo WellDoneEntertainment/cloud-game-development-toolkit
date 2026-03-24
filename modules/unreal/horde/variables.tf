@@ -41,6 +41,18 @@ variable "debug" {
   default     = false
 }
 
+variable "config_path" {
+  type        = string
+  description = "The path to your config file in Perforce"
+  default     = null
+}
+
+variable "extra_server_config" {
+  type        = map(any)
+  description = "Extra json to include in the server.json config file"
+  default     = {}
+}
+
 ########################################
 # NETWORKING
 ########################################
@@ -230,6 +242,34 @@ variable "create_unreal_horde_recycle_policy" {
 }
 
 ######################
+# SLACK CONFIG
+######################
+
+variable "slack_job_notification_channel" {
+  type        = string
+  description = "Slack channel to send job related notifications to"
+  default     = null
+}
+
+variable "slack_token" {
+  type        = string
+  description = "Bot token for interacting with Slack (xoxb-*)."
+  default     = null
+}
+
+variable "slack_socket_token" {
+  type        = string
+  description = "Token for opening a socket to slack (xapp-*)"
+  default     = null
+}
+
+variable "slack_help_channel" {
+  type        = string
+  description = "Help slack channel that users can use for issues"
+  default     = null
+}
+
+######################
 # OIDC CONFIG
 ######################
 
@@ -264,6 +304,12 @@ variable "p4_super_user_password_secret_arn" {
     condition     = (var.p4_super_user_username_secret_arn == null) == (var.p4_super_user_password_secret_arn == null)
     error_message = "p4_super_user_username_secret_arn and p4_super_user_password_secret_arn must be provided together."
   }
+}
+
+variable "auth_token_timeout_hours" {
+  type        = number
+  description = "The number of hours before authentication tokens expire."
+  default     = 72
 }
 
 ######################
@@ -314,20 +360,12 @@ variable "oidc_client_secret" {
   type        = string
   description = "The client secret used for authenticating with the OIDC provider."
   default     = null
-  validation {
-    condition     = var.auth_method != null && contains(["Okta", "OpenIdConnect"], var.auth_method) ? var.oidc_client_secret != null : var.oidc_client_secret == null
-    error_message = "An OIDC client secret must be provided for Okta and OpenIdConnect authentication methods."
-  }
 }
 
 variable "oidc_signin_redirect" {
   type        = string
   description = "The sign-in redirect URL for the OIDC provider."
   default     = null
-  validation {
-    condition     = var.auth_method != null && contains(["Okta", "OpenIdConnect"], var.auth_method) ? var.oidc_signin_redirect != null : var.oidc_signin_redirect == null
-    error_message = "An OIDC sign-in redirect URL must be provided for Okta and OpenIdConnect authentication methods."
-  }
 }
 
 variable "admin_claim_type" {
@@ -509,4 +547,56 @@ variable "enable_new_agents_by_default" {
   type        = bool
   description = "Set this flag to automatically enable new agents that enroll with the Horde Server."
   default     = false
+}
+
+# DEX
+variable "deploy_dex" {
+  type        = bool
+  description = "Set this flag to deploy dex and use it for authentication"
+  default     = false
+}
+
+variable "dex_fqdn" {
+  type        = string
+  description = "The url dex will be available at"
+  default     = null
+
+  validation {
+    condition     = !var.deploy_dex || var.dex_fqdn != null
+    error_message = "if deploy_dex is true, dex_fqdn must be set"
+  }
+}
+
+variable "dex_container_name" {
+  type        = string
+  description = "The name of the dex containerd"
+  default     = "unreal-horde-dex"
+}
+
+variable "dex_container_port" {
+  type        = number
+  description = "The port to serve the dex container on"
+  default     = 5556
+}
+
+variable "dex_auth_secret_arn" {
+  type        = string
+  description = "The secret containing the dex auth config json"
+  default     = null
+}
+
+variable "dex_connectors" {
+  type = list(object({
+    type   = string
+    id     = string
+    name   = string
+    config = any
+  }))
+  description = "The connector to use for dex auth"
+  default     = null
+
+  validation {
+    condition     = !var.deploy_dex || var.dex_connectors != null
+    error_message = "if deploy_dex is true, dex_connectors must be set"
+  }
 }
