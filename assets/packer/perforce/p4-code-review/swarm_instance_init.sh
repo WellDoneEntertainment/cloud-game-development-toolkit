@@ -179,7 +179,7 @@ if [ -f "$SWARM_CONFIG" ]; then
   P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
   if [[ -n "$P4_SECURITY" && $(($P4_SECURITY)) -ge 3 ]]; then
     log_message "P4 Server $P4D_PORT requires tickets (security level $P4_SECURITY), generating ticket for $P4D_SUPER..."
-    P4_TICKET=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD login -a -p)
+    P4_TICKET=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD login -a -p $P4D_SUPER)
     php -r "
       \$config = include '$SWARM_CONFIG';
       if (!isset(\$config['p4'])) {
