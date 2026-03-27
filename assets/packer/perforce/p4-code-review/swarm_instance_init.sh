@@ -173,6 +173,28 @@ if [ -f "$SWARM_CONFIG" ]; then
   # Backup existing configuration
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
+  log_message "Running P4 trust"
+  P4PORT=$P4D_PORT /opt/perforce/bin/p4 trust -y
+  log_message "Checking server security level..."
+  P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
+  if [[ -n "$P4_SECURITY" && $(($P4_SECURITY)) -ge 3 ]]; then
+    log_message "P4 Server $P4D_PORT requires tickets (security level $P4_SECURITY), generating ticket for $P4D_SUPER..."
+    P4_TICKET=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD login -a -p $P4D_SUPER)
+    php -r "
+      \$config = include '$SWARM_CONFIG';
+      if (!isset(\$config['p4'])) {
+        \$config['p4'] = array();
+      }
+      \$config['p4']['password'] = '$P4_TICKET';
+      
+      // Write back the configuration
+      file_put_contents('$SWARM_CONFIG', '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL);
+    " || {
+      log_message "ERROR: Failed to update config.php with P4 ticket"
+      exit 1
+    }
+  fi
+
   log_message "Adding Redis configuration to config.php"
 
   # Use PHP to properly modify the configuration file
