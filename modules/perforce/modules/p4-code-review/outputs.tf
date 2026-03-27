@@ -43,11 +43,6 @@ output "ebs_volume_id" {
   description = "The ID of the EBS volume storing P4 Code Review persistent data"
 }
 
-output "default_role_id" {
-  value       = var.create_default_role ? aws_iam_role.default_role[0].id : null
-  description = "The default role for the service task"
-}
-
 output "execution_role_id" {
   value       = aws_iam_role.task_execution_role.id
   description = "The default role for the service task"
