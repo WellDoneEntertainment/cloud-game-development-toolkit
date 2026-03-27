@@ -123,6 +123,7 @@ log_message "Running configure-swarm.sh with super user credentials"
 
 /opt/perforce/swarm/sbin/configure-swarm.sh \
   -n \
+  -f \
   -p "$P4D_PORT" \
   -u "$P4D_SUPER" \
   -w "$P4D_SUPER_PASSWD" \
