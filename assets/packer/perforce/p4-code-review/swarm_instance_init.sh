@@ -174,7 +174,7 @@ if [ -f "$SWARM_CONFIG" ]; then
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
   P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
-  if [ $P4_SECURITY -ge 3 ]; then
+  if [[ -n "$P4_SECURITY" && $(($P4_SECURITY)) -ge 3 ]]; then
     log_message "P4 Server requires tickets, generating ticket..."
     P4_TICKET=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 login -a -p)
     php -r "
