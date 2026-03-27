@@ -173,19 +173,19 @@ if [ -f "$SWARM_CONFIG" ]; then
   # Backup existing configuration
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
-  P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
+  P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
   if [ $P4_SECURITY -ge 3 ]; then
     log_message "P4 Server requires tickets, generating ticket..."
-    P4_TICKET=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT p4 login -a -p)
+    P4_TICKET=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 login -a -p)
     php -r "
-        \$config = include '$SWARM_CONFIG';
-        if (!isset(\$config['p4'])) {
-          \$config['p4'] = array();
-        }
-        \$config['p4]['password'] = '$P4_TICKET';
-        
-        // Write back the configuration
-        file_put_contents('$SWARM_CONFIG', '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL);
+      \$config = include '$SWARM_CONFIG';
+      if (!isset(\$config['p4'])) {
+        \$config['p4'] = array();
+      }
+      \$config['p4]['password'] = '$P4_TICKET';
+      
+      // Write back the configuration
+      file_put_contents('$SWARM_CONFIG', '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL);
     " || {
       log_message "ERROR: Failed to update config.php with P4 ticket"
       exit 1
