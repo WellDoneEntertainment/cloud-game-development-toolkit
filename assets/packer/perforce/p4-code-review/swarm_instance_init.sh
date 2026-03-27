@@ -173,6 +173,9 @@ if [ -f "$SWARM_CONFIG" ]; then
   # Backup existing configuration
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
+  log_message "Running P4 trust"
+  P4PORT=$P4D_PORT /opt/perforce/bin/p4 trust -y
+  log_message "Checking server security level..."
   P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
   if [[ -n "$P4_SECURITY" && $(($P4_SECURITY)) -ge 3 ]]; then
     log_message "P4 Server requires tickets (security level $P4_SECURITY), generating ticket..."
