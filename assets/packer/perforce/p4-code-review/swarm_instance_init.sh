@@ -193,6 +193,8 @@ if [ -f "$SWARM_CONFIG" ]; then
       log_message "ERROR: Failed to update config.php with P4 ticket"
       exit 1
     }
+
+    cp "$SWARM_CONFIG" "${SWARM_CONFIG}.ticket.$(date +%s)"
   fi
 
   log_message "Adding Redis configuration to config.php"
