@@ -185,7 +185,7 @@ if [ -f "$SWARM_CONFIG" ]; then
       if (!isset(\$config['p4'])) {
         \$config['p4'] = array();
       }
-      \$config['p4]['password'] = '$P4_TICKET';
+      \$config['p4']['password'] = '$P4_TICKET';
       
       // Write back the configuration
       file_put_contents('$SWARM_CONFIG', '<?php' . PHP_EOL . 'return ' . var_export(\$config, true) . ';' . PHP_EOL);
