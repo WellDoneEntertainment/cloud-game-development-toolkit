@@ -176,7 +176,10 @@ if [ -f "$SWARM_CONFIG" ]; then
   log_message "Running P4 trust"
   /opt/perforce/bin/p4 -p $P4D_PORT trust -y
   log_message "Checking server security level..."
-  P4_SECURITY=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD configure show security | cut -f2 -d= | cut -f1 -d" ")
+  P4_SECURITY=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD configure show security 2> /var/tmp/p4.err | tee | cut -f2 -d= | cut -f1 -d" ")
+  if [[ $? -ne 0 ]]; then
+    cat /var/tmp/p4.err
+  fi
   log_message "Security level is $P4_SECURITY"
   if [[ -n "$P4_SECURITY" && $(($P4_SECURITY)) -ge 3 ]]; then
     log_message "P4 Server $P4D_PORT requires tickets (security level $P4_SECURITY), generating ticket for $P4D_SUPER..."
