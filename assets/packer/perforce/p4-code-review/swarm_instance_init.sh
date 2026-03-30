@@ -173,10 +173,18 @@ if [ -f "$SWARM_CONFIG" ]; then
   # Backup existing configuration
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
-  log_message "Running P4 trust"
-  P4PORT=$P4D_PORT /opt/perforce/bin/p4 trust -y
+  # We need to set HOME here because its not set for root when the user-data script runs.
+  export HOME=/root
+  export P4TRUST=/root/.p4trust
+
   log_message "Checking server security level..."
-  P4_SECURITY=$(P4USER=$P4D_SUPER P4PASSWD=$P4D_SUPER_PASSWD P4PORT=$P4D_PORT /opt/perforce/bin/p4 configure show security | cut -f2 -d= | cut -f1 -d" ")
+  P4_SECURITY=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD configure show security 2> /var/tmp/p4.err | tee | cut -f2 -d= | cut -f1 -d" ")
+  P4_SECURITY_EXIT_CODE=$?
+  if [[ $P4_SECURITY_EXIT_CODE -ne 0 ]]; then
+    log_message "Non-zero exit code: $P4_SECURITY_EXIT_CODE"
+    cat /var/tmp/p4.err
+  fi
+  log_message "Security level is $P4_SECURITY"
   if [[ -n "$P4_SECURITY" && $(($P4_SECURITY)) -ge 3 ]]; then
     log_message "P4 Server $P4D_PORT requires tickets (security level $P4_SECURITY), generating ticket for $P4D_SUPER..."
     P4_TICKET=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD login -a -p $P4D_SUPER)
@@ -193,6 +201,8 @@ if [ -f "$SWARM_CONFIG" ]; then
       log_message "ERROR: Failed to update config.php with P4 ticket"
       exit 1
     }
+
+    cp "$SWARM_CONFIG" "${SWARM_CONFIG}.p4.$(date +%s)"
   fi
 
   log_message "Adding Redis configuration to config.php"
