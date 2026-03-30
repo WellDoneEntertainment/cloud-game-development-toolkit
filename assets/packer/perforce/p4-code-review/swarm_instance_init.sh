@@ -175,12 +175,8 @@ if [ -f "$SWARM_CONFIG" ]; then
 
   export HOME=/root
   export P4TRUST=/root/.p4trust
-  echo "HOME=$HOME"
-  echo "P4TRUST=$P4TRUST"
-  env > /var/tmp/user-data-env.log
 
   log_message "Checking server security level..."
-  log_message whoami
   P4_SECURITY=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD configure show security 2> /var/tmp/p4.err | tee | cut -f2 -d= | cut -f1 -d" ")
   P4_SECURITY_EXIT_CODE=$?
   if [[ $P4_SECURITY_EXIT_CODE -ne 0 ]]; then
