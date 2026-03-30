@@ -174,10 +174,17 @@ if [ -f "$SWARM_CONFIG" ]; then
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
   log_message "Running P4 trust"
-  /opt/perforce/bin/p4 -p $P4D_PORT trust -y
+  /opt/perforce/bin/p4 -p $P4D_PORT trust -y 2> /var/tmp/p4.err
+  P4_TRUST_EXIT_CODE=$?
+  if [[ $P4_TRUST_EXIT_CODE -ne 0 ]]; then
+    log_message "Non-zero exit code: $P4_TRUST_EXIT_CODE"
+    cat /var/tmp/p4.err
+  fi
   log_message "Checking server security level..."
   P4_SECURITY=$(/opt/perforce/bin/p4 -p $P4D_PORT -u $P4D_SUPER -P $P4D_SUPER_PASSWD configure show security 2> /var/tmp/p4.err | tee | cut -f2 -d= | cut -f1 -d" ")
-  if [[ $? -ne 0 ]]; then
+  P4_SECURITY_EXIT_CODE=$?
+  if [[ $P4_SECURITY_EXIT_CODE -ne 0 ]]; then
+    log_message "Non-zero exit code: $P4_SECURITY_EXIT_CODE"
     cat /var/tmp/p4.err
   fi
   log_message "Security level is $P4_SECURITY"
