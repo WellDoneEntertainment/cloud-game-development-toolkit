@@ -173,6 +173,7 @@ if [ -f "$SWARM_CONFIG" ]; then
   # Backup existing configuration
   cp "$SWARM_CONFIG" "${SWARM_CONFIG}.backup.$(date +%s)"
 
+  # We need to set HOME here because its not set for root when the user-data script runs.
   export HOME=/root
   export P4TRUST=/root/.p4trust
 
