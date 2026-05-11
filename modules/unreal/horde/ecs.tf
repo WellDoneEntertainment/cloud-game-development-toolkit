@@ -256,16 +256,6 @@ local.need_p4_trust ? [{
         apt-get update
         apt-get install -y p4-cli
         p4 -p ${var.p4_port} trust -y
-
-        # Upload the p4trust file for agents to pull
-        %{if length(var.agents) > 0}
-        curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip
-        unzip awscliv2.zip
-        ./aws/install
-        rm -rf awscliv2.zip aws
-
-        aws s3 cp $P4TRUST s3://${aws_s3_bucket.ansible_playbooks[0].id}/agent/.p4trust
-        %{endif}
       EOF
   ]
   readonly_root_filesystem = false
