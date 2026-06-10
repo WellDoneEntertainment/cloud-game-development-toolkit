@@ -285,7 +285,7 @@ var.deploy_dex ? [{
   image                    = "ghcr.io/dexidp/dex:v2.45.1"
   essential                = true
   readonly_root_filesystem = false
-  command                  = ["serve", "/app/config/dex.yaml"]
+  command                  = ["dex", "serve", "/app/config/dex.yaml"]
   mountPoints = [
     {
       sourceVolume  = "unreal-horde-config",
