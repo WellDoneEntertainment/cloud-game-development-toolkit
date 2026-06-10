@@ -282,7 +282,7 @@ local.need_p4_trust ? [{
 }] : [],
 var.deploy_dex ? [{
   name                     = var.dex_container_name,
-  image                    = "public.ecr.aws/bitnami/dex:2"
+  image                    = "ghcr.io/dexidp/dex:v2.45.1"
   essential                = true
   readonly_root_filesystem = false
   command                  = ["serve", "/app/config/dex.yaml"]
