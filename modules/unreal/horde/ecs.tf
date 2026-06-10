@@ -55,15 +55,6 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
           hostPort      = var.container_grpc_port
         }
       ]
-      healthCheck = {
-        command = [
-          "CMD-SHELL", "apt update && apt install curl -y && curl http://localhost:${var.container_api_port}/health/ok || exit 1",
-        ]
-        interval    = 5
-        retries     = 3
-        startPeriod = 10
-        timeout     = 5
-      }
       environment = [
         {
           name  = "P4TRUST"
@@ -209,7 +200,7 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
         %{if var.deploy_dex~}
         echo '${yamlencode(local.dex_config)}' > /app/config/dex.yaml
         %{if var.dex_auth_secret_arn != null~}
-        echo $DEX_AUTH_JSON > /app/config/dex_auth.json
+        echo "$DEX_AUTH_JSON" > /app/config/dex_auth.json
         %{endif}
         %{endif}
         EOF
@@ -298,15 +289,6 @@ var.deploy_dex ? [{
       hostPort      = var.dex_container_port
     }
   ]
-  healthCheck = {
-    command = [
-      "CMD-SHELL", "curl http://localhost:${var.dex_container_port} || exit 1",
-    ]
-    interval    = 5
-    retries     = 3
-    startPeriod = 10
-    timeout     = 5
-  }
   logConfiguration = {
     logDriver = "awslogs"
     options = {
