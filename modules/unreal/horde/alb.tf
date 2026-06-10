@@ -37,7 +37,7 @@ resource "aws_lb_target_group" "unreal_horde_api_target_group_external" {
   target_type = "ip"
   vpc_id      = var.vpc_id
   health_check {
-    path                = "/health/ok"
+    path                = "/"
     protocol            = "HTTP"
     matcher             = "200"
     port                = "traffic-port"
@@ -86,7 +86,7 @@ resource "aws_lb_target_group" "unreal_horde_dex_target_group_external" {
   vpc_id      = var.vpc_id
 
   health_check {
-    path                = "/healthz"
+    path                = "/"
     protocol            = "HTTP"
     matcher             = "200"
     port                = "traffic-port"
@@ -207,7 +207,7 @@ resource "aws_lb_target_group" "unreal_horde_api_target_group_internal" {
   target_type = "ip"
   vpc_id      = var.vpc_id
   health_check {
-    path                = "/health/ok"
+    path                = "/"
     protocol            = "HTTP"
     matcher             = "200"
     port                = "traffic-port"
@@ -259,7 +259,7 @@ resource "aws_lb_target_group" "unreal_horde_dex_target_group_internal" {
   vpc_id      = var.vpc_id
 
   health_check {
-    path                = "/healthz"
+    path                = "/"
     protocol            = "HTTP"
     matcher             = "200"
     port                = "traffic-port"
