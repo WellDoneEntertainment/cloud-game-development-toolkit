@@ -63,6 +63,18 @@ locals {
         "http://localhost:8749/ugs.client",
         "http://localhost:8749/",
       ],
+    },
+    {
+      id     = "robomerge"
+      name   = "RoboMerge"
+      public = true
+      redirectURIs = [
+        "https://robomerge.in.wde.ninja/signin-oidc",
+        "http://172.31.117.23:8877/signin-oidc",
+        "http://172.31.117.23:8877",
+        "https://172.31.117.23:4433/signin-oidc",
+        "https://172.31.117.23:4433"
+      ],
     }]
   } : null
 }
