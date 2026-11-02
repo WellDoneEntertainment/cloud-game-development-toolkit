@@ -113,6 +113,7 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
     {
       name      = "unreal-horde-config",
       image     = "registry.gitlab.com/gitlab-ci-utils/curl-jq:latest"
+      user      = "root"
       essential = false
       command = ["/bin/bash", "-exc",
         <<-EOF
@@ -238,6 +239,7 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
 local.need_p4_trust ? [{
   name      = "unreal-horde-p4-trust",
   image     = "public.ecr.aws/ubuntu/ubuntu:noble"
+  user      = "root"
   essential = false
   command = ["bash", "-exc", <<-EOF
         apt-get update
