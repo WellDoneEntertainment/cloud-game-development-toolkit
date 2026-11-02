@@ -241,7 +241,7 @@ local.need_p4_trust ? [{
   essential = false
   command = ["bash", "-exc", <<-EOF
         apt-get update
-        apt-get install -y curl gnupg unzip
+        apt-get install -y curl gnupg unzip perl
         curl -fs https://package.perforce.com/perforce.pubkey | gpg --dearmor -o /usr/share/keyrings/perforce.gpg
         echo "deb [signed-by=/usr/share/keyrings/perforce.gpg] https://package.perforce.com/apt/ubuntu noble release" > /etc/apt/sources.list.d/perforce.list
         apt-get update
