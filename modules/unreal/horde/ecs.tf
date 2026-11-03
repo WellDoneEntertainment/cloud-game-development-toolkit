@@ -89,7 +89,7 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
         logDriver = "awslogs"
         options = {
           awslogs-group         = aws_cloudwatch_log_group.unreal_horde_log_group.name
-          awslogs-region        = data.aws_region.current.id
+          awslogs-region        = data.aws_region.current.region
           awslogs-stream-prefix = "[APP]"
         }
       }
@@ -231,7 +231,7 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
     logDriver = "awslogs"
     options = {
       awslogs-group         = aws_cloudwatch_log_group.unreal_horde_log_group.name
-      awslogs-region        = data.aws_region.current.id
+      awslogs-region        = data.aws_region.current.region
       awslogs-stream-prefix = "[P4CONFIG]"
     }
   },
@@ -268,7 +268,7 @@ local.need_p4_trust ? [{
     logDriver = "awslogs"
     options = {
       awslogs-group         = aws_cloudwatch_log_group.unreal_horde_log_group.name
-      awslogs-region        = data.aws_region.current.id
+      awslogs-region        = data.aws_region.current.region
       awslogs-stream-prefix = "[P4TRUST]"
     }
   },
@@ -295,7 +295,7 @@ var.deploy_dex ? [{
     logDriver = "awslogs"
     options = {
       awslogs-group         = aws_cloudwatch_log_group.unreal_horde_log_group.name
-      awslogs-region        = data.aws_region.current.id
+      awslogs-region        = data.aws_region.current.region
       awslogs-stream-prefix = "[DEX]"
     }
   },
