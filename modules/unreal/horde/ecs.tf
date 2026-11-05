@@ -319,7 +319,7 @@ resource "aws_ecs_service" "unreal_horde" {
   task_definition        = aws_ecs_task_definition.unreal_horde_task_definition.arn
   launch_type            = "FARGATE"
   desired_count          = var.desired_container_count
-  force_new_deployment   = var.debug
+  force_new_deployment   = false
   enable_execute_command = var.debug
 
   wait_for_steady_state = true
