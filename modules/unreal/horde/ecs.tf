@@ -162,7 +162,7 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
 
             MongoPublicCertificate: "/app/config/global-bundle.pem",
             MongoConnectionString: "${local.database_connection_string}",
-            RedisConnectionString: "${local.redis_connection_config}",
+            RedisConnectionConfig: "${local.redis_connection_config}",
 
             EnableDebugEndpoints: ${var.debug},
             ForceConfigUpdateOnStartup: true,
