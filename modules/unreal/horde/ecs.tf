@@ -148,9 +148,9 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
           perforceClusters: [
             {
               "name": "Default",
-              "serviceAccount": "$(P4USER)",
+              "serviceAccount": "super",
               "canImpersonate": false,
-              "servers": [ { "serverAndPort": "$(P4PORT)" } ],
+              "servers": [ { "serverAndPort": "${var.p4_port}" } ],
               "credentials": [ { "userName": "$(P4USER)", "password": "$(P4PASSWD)" } ]
             }
           ],
