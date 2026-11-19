@@ -12,7 +12,7 @@ resource "aws_docdb_subnet_group" "horde" {
 resource "aws_docdb_cluster_parameter_group" "horde" {
   count = var.database_connection_string == null ? 1 : 0
 
-  family      = "docdb5.0"
+  family      = "docdb8.0"
   name        = "${var.name}-docdb-parameter-group"
   description = "Horde DocumentDb cluster parameter group"
   #checkov:skip=CKV_AWS_104:Audit logs will be enabled through variable
