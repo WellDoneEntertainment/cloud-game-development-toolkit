@@ -145,17 +145,15 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
         },
     ] : "{ Name: \"${macro.Name}\", Value: ${macro.Value} }" if macro.Condition])}
           ],
-          %{if var.p4_port != null && var.p4_super_user_username_secret_arn != null && var.p4_super_user_password_secret_arn != null}
           perforceClusters: [
             {
               "name": "Default",
-              "serviceAccount": "env.P4_SUPER_USERNAME",
+              "serviceAccount": "$(P4USER)",
               "canImpersonate": false,
-              "servers": [ { "serverAndPort": "${var.p4_port}" } ],
-              "credentials": [ { "userName": "env.P4_SUPER_USERNAME", "password": "env.P4_SUPER_PASSWORD" } ]
+              "servers": [ { "serverAndPort": "$(P4PORT)" } ],
+              "credentials": [ { "userName": "$(P4USER)", "password": "$(P4PASSWD)" } ]
             }
           ],
-          %{endif}
           %{if var.config_path != null}
           Include: [
             { Path: "${var.config_path}" }
