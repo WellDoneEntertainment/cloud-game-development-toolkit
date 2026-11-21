@@ -151,7 +151,8 @@ resource "aws_ecs_task_definition" "unreal_horde_task_definition" {
               "serviceAccount": "super",
               "canImpersonate": false,
               "servers": [ { "serverAndPort": "${var.p4_port}" } ],
-              "credentials": [ { "userName": "$(P4USER)", "password": "$(P4PASSWD)" } ]
+              "credentials": [ { "userName": "$(P4USER)", "password": "$(P4PASSWD)" } ],
+              "autoSdk": [ { "stream": "//AutoSDK/Main" } ]
             }
           ],
           %{if var.config_path != null}
